@@ -20,7 +20,7 @@ jobs:
         ros-distro: [humble, jazzy, rolling]
         desktop: [xfce, lxde]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: docker/setup-qemu-action@v3
 
