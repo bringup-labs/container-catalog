@@ -15,5 +15,8 @@ RUN chmod +x /tmp/install-firefox.sh && /tmp/install-firefox.sh
 COPY apps/vscodium/install.sh /tmp/install-vscodium.sh
 RUN chmod +x /tmp/install-vscodium.sh && /tmp/install-vscodium.sh
 
+# Copy pre-configured LXPanel profile (fixes taskbar rendering issues)
+COPY desktop/lxde/config/ /etc/skel/.config/
+
 # Copy desktop-specific supervisor configs
 COPY desktop/lxde/conf.d/ /app/desktop-conf.d/

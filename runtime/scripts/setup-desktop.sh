@@ -34,7 +34,15 @@ if command -v xfce4-session &>/dev/null && [ -f "$WALLPAPER" ]; then
 XFCE_EOF
 fi
 
-# --- LXDE wallpaper configuration ---
+# --- LXDE panel + wallpaper configuration ---
+if command -v pcmanfm &>/dev/null; then
+    # Copy pre-configured LXPanel profile from skel (removes pager/volume applets)
+    if [ -d /etc/skel/.config/lxpanel ]; then
+        mkdir -p "${USER_HOME}/.config"
+        cp -r /etc/skel/.config/lxpanel "${USER_HOME}/.config/"
+    fi
+fi
+
 if command -v pcmanfm &>/dev/null && [ -f "$WALLPAPER" ]; then
     LXDE_DESKTOP_DIR="${USER_HOME}/.config/pcmanfm/LXDE"
     mkdir -p "$LXDE_DESKTOP_DIR"
