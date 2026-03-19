@@ -1,0 +1,8 @@
+# VNC and process management packages
+supervisor
+tini
+dbus
+x11vnc
+xvfb
+x11-utils
+xterm

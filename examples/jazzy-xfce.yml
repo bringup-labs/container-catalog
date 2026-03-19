@@ -1,0 +1,21 @@
+services:
+  ros2-desktop:
+    image: ghcr.io/rahulkatiyar19955/container-catalog:jazzy-xfce
+    container_name: ros2-jazzy-xfce
+    environment:
+      - CONTAINER_USER=ubuntu
+      - CONTAINER_PASSWORD=ubuntu
+      - DISPLAY_WIDTH=1920
+      - DISPLAY_HEIGHT=1080
+    ports:
+      - "8080:8080"   # noVNC web access
+      - "5900:5900"   # VNC direct access
+    volumes:
+      - ros2_ws:/home/ubuntu/ros2_ws
+    security_opt:
+      - seccomp:unconfined
+    shm_size: "512m"
+    restart: unless-stopped
+
+volumes:
+  ros2_ws:
