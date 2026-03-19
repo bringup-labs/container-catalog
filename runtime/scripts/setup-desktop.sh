@@ -34,13 +34,11 @@ if command -v xfce4-session &>/dev/null && [ -f "$WALLPAPER" ]; then
 XFCE_EOF
 fi
 
-# --- LXDE panel + wallpaper configuration ---
-if command -v pcmanfm &>/dev/null; then
-    # Copy pre-configured LXPanel profile from skel (removes pager/volume applets)
-    if [ -d /etc/skel/.config/lxpanel ]; then
-        mkdir -p "${USER_HOME}/.config"
-        cp -r /etc/skel/.config/lxpanel "${USER_HOME}/.config/"
-    fi
+# --- LXDE pre-configured settings from skel ---
+if command -v pcmanfm &>/dev/null && [ -d /etc/skel/.config ]; then
+    # Copy LXPanel profile (fixes taskbar) and libfm config (disables .desktop trust prompt)
+    mkdir -p "${USER_HOME}/.config"
+    cp -r /etc/skel/.config/* "${USER_HOME}/.config/" 2>/dev/null || true
 fi
 
 if command -v pcmanfm &>/dev/null && [ -f "$WALLPAPER" ]; then
