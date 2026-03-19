@@ -1,0 +1,11 @@
+# LXDE desktop environment packages (ultra-lightweight)
+lxde-core
+openbox
+lxpanel
+pcmanfm
+lxterminal
+dbus-x11
+at-spi2-core
+terminator
+arc-theme
+adwaita-icon-theme

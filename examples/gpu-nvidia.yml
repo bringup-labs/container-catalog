@@ -1,0 +1,30 @@
+services:
+  ros2-desktop-gpu:
+    image: bringuplabs/ros2-desktop-vnc:jazzy-xfce
+    container_name: ros2-jazzy-gpu
+    environment:
+      - CONTAINER_USER=ubuntu
+      - CONTAINER_PASSWORD=ubuntu
+      - DISPLAY_WIDTH=1920
+      - DISPLAY_HEIGHT=1080
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    ports:
+      - "8080:8080"
+      - "5900:5900"
+    volumes:
+      - ros2_ws:/home/ubuntu/ros2_ws
+    security_opt:
+      - seccomp:unconfined
+    shm_size: "1g"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  ros2_ws:

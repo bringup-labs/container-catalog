@@ -1,0 +1,56 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        ros-distro: [humble, jazzy, rolling]
+        desktop: [xfce, lxde]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true
+
+      - name: Build image
+        run: |
+          docker buildx bake ${{ matrix.ros-distro }}-${{ matrix.desktop }} \
+            --set "*.platform=linux/amd64" \
+            --load
+
+      - name: Smoke test - ROS2
+        run: |
+          docker run --rm --security-opt seccomp=unconfined \
+            --entrypoint bash \
+            ${REGISTRY}:${{ matrix.ros-distro }}-${{ matrix.desktop }} \
+            -c "source /opt/ros/${{ matrix.ros-distro }}/setup.bash && ros2 --help"
+        env:
+          REGISTRY: ghcr.io/bringup-labs/ros2-desktop-vnc
+
+      - name: Smoke test - VNC services
+        run: |
+          CONTAINER_ID=$(docker run -d --security-opt seccomp=unconfined \
+            -p 8080:8080 -p 5900:5900 \
+            ${REGISTRY}:${{ matrix.ros-distro }}-${{ matrix.desktop }})
+          sleep 15
+          docker exec "$CONTAINER_ID" /app/scripts/healthcheck.sh
+          docker stop "$CONTAINER_ID"
+        env:
+          REGISTRY: ghcr.io/bringup-labs/ros2-desktop-vnc
