@@ -8,6 +8,6 @@ echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.asc ] https:/
     | tee /etc/apt/sources.list.d/vscodium.list
 
 apt-get update -q
-apt-get install -y codium
+apt-get install -y --no-install-recommends codium
 apt-get autoclean && apt-get autoremove
 rm -rf /var/lib/apt/lists/*

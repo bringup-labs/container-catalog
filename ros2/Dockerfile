@@ -14,8 +14,8 @@ RUN chmod +x /tmp/install-ros2.sh && /tmp/install-ros2.sh
 COPY ros2/install-sim.sh /tmp/install-sim.sh
 RUN chmod +x /tmp/install-sim.sh && /tmp/install-sim.sh
 
-# Initialize rosdep
-RUN rosdep init && rosdep update
+# Initialize rosdep (allow failure if already initialized)
+RUN rosdep init 2>/dev/null || true && rosdep update
 
 # Enable apt-get completion after running apt-get update in container
 RUN rm -f /etc/apt/apt.conf.d/docker-clean

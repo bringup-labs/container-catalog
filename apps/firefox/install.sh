@@ -7,9 +7,11 @@ case "$CODENAME" in
     jammy)
         # Jammy requires PPA for non-snap Firefox
         DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:mozillateam/ppa -y
-        echo 'Package: *' > /etc/apt/preferences.d/mozilla-firefox
-        echo 'Pin: release o=LP-PPA-mozillateam' >> /etc/apt/preferences.d/mozilla-firefox
-        echo 'Pin-Priority: 1001' >> /etc/apt/preferences.d/mozilla-firefox
+        cat > /etc/apt/preferences.d/mozilla-firefox <<'EOF'
+Package: *
+Pin: release o=LP-PPA-mozillateam
+Pin-Priority: 1001
+EOF
         ;;
     noble|*)
         # Noble and newer use Mozilla's official apt repo
@@ -18,8 +20,11 @@ case "$CODENAME" in
             -O /etc/apt/keyrings/packages.mozilla.org.asc
         echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" \
             | tee /etc/apt/sources.list.d/mozilla-apt.list
-        echo -e "Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000" \
-            > /etc/apt/preferences.d/mozilla
+        cat > /etc/apt/preferences.d/mozilla <<'EOF'
+Package: *
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
+EOF
         ;;
 esac
 

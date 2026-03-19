@@ -38,8 +38,9 @@ jobs:
       - name: Smoke test - ROS2
         run: |
           docker run --rm --security-opt seccomp=unconfined \
+            --entrypoint bash \
             ${REGISTRY}:${{ matrix.ros-distro }}-${{ matrix.desktop }} \
-            bash -c "source /opt/ros/${{ matrix.ros-distro }}/setup.bash && ros2 --help"
+            -c "source /opt/ros/${{ matrix.ros-distro }}/setup.bash && ros2 --help"
         env:
           REGISTRY: ghcr.io/bringup-labs/ros2-desktop-vnc
 
@@ -48,7 +49,7 @@ jobs:
           CONTAINER_ID=$(docker run -d --security-opt seccomp=unconfined \
             -p 8080:8080 -p 5900:5900 \
             ${REGISTRY}:${{ matrix.ros-distro }}-${{ matrix.desktop }})
-          sleep 10
+          sleep 15
           docker exec "$CONTAINER_ID" /app/scripts/healthcheck.sh
           docker stop "$CONTAINER_ID"
         env:
