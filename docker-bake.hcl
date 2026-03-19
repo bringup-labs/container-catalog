@@ -7,7 +7,15 @@
 #   docker buildx bake --print jazzy-xfce  # Preview build plan
 
 variable "REGISTRY" {
-  default = "ghcr.io/rahulkatiyar19955/container-catalog"
+  default = "ghcr.io/bringup-labs"
+}
+
+variable "DOCKERHUB_REGISTRY" {
+  default = "docker.io/bringuplabs"
+}
+
+variable "IMAGE_NAME" {
+  default = "ros2-desktop-vnc"
 }
 
 # ============================================================
@@ -49,14 +57,14 @@ group "rolling" {
 target "base-jammy" {
   dockerfile = "base/Dockerfile.jammy"
   context    = "."
-  tags       = ["${REGISTRY}/base:jammy"]
+  tags       = ["${REGISTRY}/ros2-base:jammy"]
   platforms  = ["linux/amd64", "linux/arm64"]
 }
 
 target "base-noble" {
   dockerfile = "base/Dockerfile.noble"
   context    = "."
-  tags       = ["${REGISTRY}/base:noble"]
+  tags       = ["${REGISTRY}/ros2-base:noble"]
   platforms  = ["linux/amd64", "linux/arm64"]
 }
 
@@ -79,7 +87,7 @@ target "ros2-humble" {
     ROS_DISTRO      = "humble"
     INSTALL_PACKAGE = "desktop"
   }
-  tags = ["${REGISTRY}/ros2:humble"]
+  tags = ["${REGISTRY}/ros2-layer:humble"]
 }
 
 target "ros2-jazzy" {
@@ -91,7 +99,7 @@ target "ros2-jazzy" {
     ROS_DISTRO      = "jazzy"
     INSTALL_PACKAGE = "desktop"
   }
-  tags = ["${REGISTRY}/ros2:jazzy"]
+  tags = ["${REGISTRY}/ros2-layer:jazzy"]
 }
 
 target "ros2-rolling" {
@@ -103,7 +111,7 @@ target "ros2-rolling" {
     ROS_DISTRO      = "rolling"
     INSTALL_PACKAGE = "desktop"
   }
-  tags = ["${REGISTRY}/ros2:rolling"]
+  tags = ["${REGISTRY}/ros2-layer:rolling"]
 }
 
 # ============================================================
@@ -121,21 +129,21 @@ target "humble-xfce-base" {
   inherits   = ["_desktop-common"]
   dockerfile = "desktop/xfce/Dockerfile"
   contexts   = { base = "target:ros2-humble" }
-  tags       = ["${REGISTRY}/desktop:humble-xfce"]
+  tags       = ["${REGISTRY}/ros2-desktop:humble-xfce"]
 }
 
 target "jazzy-xfce-base" {
   inherits   = ["_desktop-common"]
   dockerfile = "desktop/xfce/Dockerfile"
   contexts   = { base = "target:ros2-jazzy" }
-  tags       = ["${REGISTRY}/desktop:jazzy-xfce"]
+  tags       = ["${REGISTRY}/ros2-desktop:jazzy-xfce"]
 }
 
 target "rolling-xfce-base" {
   inherits   = ["_desktop-common"]
   dockerfile = "desktop/xfce/Dockerfile"
   contexts   = { base = "target:ros2-rolling" }
-  tags       = ["${REGISTRY}/desktop:rolling-xfce"]
+  tags       = ["${REGISTRY}/ros2-desktop:rolling-xfce"]
 }
 
 # --- LXDE variants ---
@@ -144,21 +152,21 @@ target "humble-lxde-base" {
   inherits   = ["_desktop-common"]
   dockerfile = "desktop/lxde/Dockerfile"
   contexts   = { base = "target:ros2-humble" }
-  tags       = ["${REGISTRY}/desktop:humble-lxde"]
+  tags       = ["${REGISTRY}/ros2-desktop:humble-lxde"]
 }
 
 target "jazzy-lxde-base" {
   inherits   = ["_desktop-common"]
   dockerfile = "desktop/lxde/Dockerfile"
   contexts   = { base = "target:ros2-jazzy" }
-  tags       = ["${REGISTRY}/desktop:jazzy-lxde"]
+  tags       = ["${REGISTRY}/ros2-desktop:jazzy-lxde"]
 }
 
 target "rolling-lxde-base" {
   inherits   = ["_desktop-common"]
   dockerfile = "desktop/lxde/Dockerfile"
   contexts   = { base = "target:ros2-rolling" }
-  tags       = ["${REGISTRY}/desktop:rolling-lxde"]
+  tags       = ["${REGISTRY}/ros2-desktop:rolling-lxde"]
 }
 
 # ============================================================
@@ -177,8 +185,10 @@ target "humble-xfce" {
   inherits = ["_runtime-common"]
   contexts = { base = "target:humble-xfce-base" }
   tags     = [
-    "${REGISTRY}:humble-xfce",
-    "${REGISTRY}:humble",
+    "${REGISTRY}/${IMAGE_NAME}:humble-xfce",
+    "${REGISTRY}/${IMAGE_NAME}:humble",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:humble-xfce",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:humble",
   ]
 }
 
@@ -186,9 +196,12 @@ target "jazzy-xfce" {
   inherits = ["_runtime-common"]
   contexts = { base = "target:jazzy-xfce-base" }
   tags     = [
-    "${REGISTRY}:jazzy-xfce",
-    "${REGISTRY}:jazzy",
-    "${REGISTRY}:latest",
+    "${REGISTRY}/${IMAGE_NAME}:jazzy-xfce",
+    "${REGISTRY}/${IMAGE_NAME}:jazzy",
+    "${REGISTRY}/${IMAGE_NAME}:latest",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:jazzy-xfce",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:jazzy",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:latest",
   ]
 }
 
@@ -196,8 +209,10 @@ target "rolling-xfce" {
   inherits = ["_runtime-common"]
   contexts = { base = "target:rolling-xfce-base" }
   tags     = [
-    "${REGISTRY}:rolling-xfce",
-    "${REGISTRY}:rolling",
+    "${REGISTRY}/${IMAGE_NAME}:rolling-xfce",
+    "${REGISTRY}/${IMAGE_NAME}:rolling",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:rolling-xfce",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:rolling",
   ]
 }
 
@@ -206,17 +221,26 @@ target "rolling-xfce" {
 target "humble-lxde" {
   inherits = ["_runtime-common"]
   contexts = { base = "target:humble-lxde-base" }
-  tags     = ["${REGISTRY}:humble-lxde"]
+  tags     = [
+    "${REGISTRY}/${IMAGE_NAME}:humble-lxde",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:humble-lxde",
+  ]
 }
 
 target "jazzy-lxde" {
   inherits = ["_runtime-common"]
   contexts = { base = "target:jazzy-lxde-base" }
-  tags     = ["${REGISTRY}:jazzy-lxde"]
+  tags     = [
+    "${REGISTRY}/${IMAGE_NAME}:jazzy-lxde",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:jazzy-lxde",
+  ]
 }
 
 target "rolling-lxde" {
   inherits = ["_runtime-common"]
   contexts = { base = "target:rolling-lxde-base" }
-  tags     = ["${REGISTRY}:rolling-lxde"]
+  tags     = [
+    "${REGISTRY}/${IMAGE_NAME}:rolling-lxde",
+    "${DOCKERHUB_REGISTRY}/${IMAGE_NAME}:rolling-lxde",
+  ]
 }

@@ -20,7 +20,7 @@ docker run -d \
   -p 8080:8080 \
   --security-opt seccomp=unconfined \
   --shm-size=512m \
-  ghcr.io/rahulkatiyar19955/container-catalog:jazzy-xfce
+  bringuplabs/ros2-desktop-vnc:jazzy-xfce
 ```
 
 Open **http://localhost:8080** in your browser.
@@ -30,7 +30,7 @@ Open **http://localhost:8080** in your browser.
 ```yaml
 services:
   ros2-desktop:
-    image: ghcr.io/rahulkatiyar19955/container-catalog:jazzy-xfce
+    image: bringuplabs/ros2-desktop-vnc:jazzy-xfce
     ports:
       - "8080:8080"
       - "5900:5900"
@@ -72,7 +72,7 @@ docker run -d \
   --security-opt seccomp=unconfined \
   -e NVIDIA_VISIBLE_DEVICES=all \
   -e NVIDIA_DRIVER_CAPABILITIES=all \
-  ghcr.io/rahulkatiyar19955/container-catalog:jazzy-xfce
+  bringuplabs/ros2-desktop-vnc:jazzy-xfce
 ```
 
 ## Architecture

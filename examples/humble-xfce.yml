@@ -1,6 +1,6 @@
 services:
   ros2-desktop:
-    image: ghcr.io/rahulkatiyar19955/container-catalog:humble-xfce
+    image: bringuplabs/ros2-desktop-vnc:humble-xfce
     container_name: ros2-humble-xfce
     environment:
       - CONTAINER_USER=ubuntu

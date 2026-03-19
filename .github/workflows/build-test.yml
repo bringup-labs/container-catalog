@@ -41,7 +41,7 @@ jobs:
             ${REGISTRY}:${{ matrix.ros-distro }}-${{ matrix.desktop }} \
             bash -c "source /opt/ros/${{ matrix.ros-distro }}/setup.bash && ros2 --help"
         env:
-          REGISTRY: ghcr.io/rahulkatiyar19955/container-catalog
+          REGISTRY: ghcr.io/bringup-labs/ros2-desktop-vnc
 
       - name: Smoke test - VNC services
         run: |
@@ -52,4 +52,4 @@ jobs:
           docker exec "$CONTAINER_ID" /app/scripts/healthcheck.sh
           docker stop "$CONTAINER_ID"
         env:
-          REGISTRY: ghcr.io/rahulkatiyar19955/container-catalog
+          REGISTRY: ghcr.io/bringup-labs/ros2-desktop-vnc

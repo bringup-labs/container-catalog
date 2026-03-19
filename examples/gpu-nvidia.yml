@@ -1,6 +1,6 @@
 services:
   ros2-desktop-gpu:
-    image: ghcr.io/rahulkatiyar19955/container-catalog:jazzy-xfce
+    image: bringuplabs/ros2-desktop-vnc:jazzy-xfce
     container_name: ros2-jazzy-gpu
     environment:
       - CONTAINER_USER=ubuntu
