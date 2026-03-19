@@ -6,6 +6,8 @@ CODENAME=$(lsb_release -cs)
 case "$CODENAME" in
     jammy)
         # Jammy requires PPA for non-snap Firefox
+        apt-get update -q
+        apt-get install -y --no-install-recommends software-properties-common
         DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:mozillateam/ppa -y
         cat > /etc/apt/preferences.d/mozilla-firefox <<'EOF'
 Package: *
