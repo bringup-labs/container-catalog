@@ -14,9 +14,9 @@ jobs:
         ros-distro: [humble, jazzy, rolling]
         desktop: [xfce, lxde]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
 
       - name: Free disk space
         uses: jlumbroso/free-disk-space@main
